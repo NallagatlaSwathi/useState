@@ -1,26 +1,56 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { ChangeEvent } from "react";
+import { Counter } from "./components";
 
-function App() {
+const App = () => {
+  const [step, setStep] = React.useState(1);
+  const [error, setError] = React.useState("");
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const stepInput = parseInt(event.target.value);
+
+    if (!isNaN(stepInput)) {
+      setStep(stepInput);
+      setError("");
+    } else {
+      setError("Please enter only numbers");
+    }
+  };
+
+  // Controlled input
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <div>
+        <label htmlFor="step">Enter the step value:</label>
+        <input
+          type="text"
+          name="step"
+          id="step"
+          value={step} // Syncs UI state to App state
+          onChange={handleChange} // Syncs App state to UI changes
+        />
+        <div>
+          <span>
+            You can also increment step using this counter:
+            <Counter
+              increment={() => {
+                setStep(step + 1);
+              }}
+              decrement={() => {
+                setStep(step - 1);
+              }}
+            >
+              {step}
+            </Counter>
+          </span>
+        </div>
+        {error && <p>{error}</p>}
+      </div>
+
+      <Counter />
+      <br />
+      <Counter step={step} />
+    </>
   );
-}
+};
 
 export default App;
